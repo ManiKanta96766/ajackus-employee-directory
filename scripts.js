@@ -7,17 +7,16 @@ let employees = [
 let currentPage = 1;
 let pageSize = 10;
 let filteredEmployees = [...employees];
+let sortField = null;
+let sortDirection = 1; // 1 for ascending, -1 for descending
 
-// Wait for DOM to load
-
-    console.log("DOM fully loaded and parsed"); // Debug log
 
     // Form handling
     const form = document.getElementById('addEditForm');
     if (form) {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
-            console.log("Form submit triggered"); // Debug log
+            console.log("Form submit triggered");
             if (validateForm()) {
                 saveEmployee();
             }
@@ -44,10 +43,10 @@ let filteredEmployees = [...employees];
 
     // Saves or updates an employee
     function saveEmployee() {
-        console.log("Save Employee triggered"); // Debug log
+        console.log("Save Employee triggered");
         const employeeId = document.getElementById('employeeId').value;
         const employee = {
-            id: employeeId ? parseInt(employeeId) : filteredEmployees[filteredEmployees.length -1].id+ 1,
+            id: employeeId ? parseInt(employeeId) : employees.length + 1,
             firstName: document.getElementById('firstName').value,
             lastName: document.getElementById('lastName').value,
             email: document.getElementById('email').value,
@@ -62,13 +61,14 @@ let filteredEmployees = [...employees];
             employees.push(employee);
         }
         filteredEmployees = [...employees];
+        applySort();
         renderEmployees();
         cancelForm();
     }
 
     // Edits an existing employee
     function editEmployee(id) {
-        console.log("Edit Employee triggered for ID:", id); // Debug log
+        console.log("Edit Employee triggered for ID:", id);
         const employee = employees.find(emp => emp.id === id);
         if (!employee) {
             alert('Employee not found');
@@ -86,18 +86,19 @@ let filteredEmployees = [...employees];
 
     // Deletes an employee
     function deleteEmployee(id) {
-        console.log("Delete Employee triggered for ID:", id); // Debug log
+        console.log("Delete Employee triggered for ID:", id);
         if (confirm('Are you sure you want to delete this employee?')) {
             employees = employees.filter(emp => emp.id !== id);
             filteredEmployees = [...employees];
+            applySort();
             renderEmployees();
         }
     }
 
     // Shows the add employee form
     function showAddForm() {
-        console.log("Show Add Form triggered"); // Debug log
-        document.getElementById('formTitle').textContent = 'Add Employee';
+        console.log("Show Add Form triggered");
+        document.getElementById('formTitle').content = 'Add Employee';
         document.getElementById('addEditForm').reset();
         document.getElementById('employeeId').value = '';
         document.getElementById('employeeForm').style.display = 'block';
@@ -105,7 +106,7 @@ let filteredEmployees = [...employees];
 
     // Cancels the form and resets it
     function cancelForm() {
-        console.log("Cancel Form triggered"); // Debug log
+        console.log("Cancel Form triggered");
         document.getElementById('employeeForm').style.display = 'none';
         document.getElementById('addEditForm').reset();
         clearErrors();
@@ -120,18 +121,21 @@ let filteredEmployees = [...employees];
 
     // Toggles the filter modal
     function toggleFilter() {
-        console.log("Toggle Filter triggered"); // Debug log
+        console.log("Toggle Filter triggered");
         const overlay = document.getElementById('modalOverlay');
         const popup = document.getElementById('filterPopup');
         if (overlay && popup) {
             overlay.classList.toggle('active');
             popup.classList.toggle('active');
+            if (popup.classList.contains('active')) {
+                document.getElementById('filterFirstName').focus();
+            }
         }
     }
 
     // Applies filters to the employee list
     function applyFilter() {
-        console.log("Apply Filter triggered"); // Debug log
+        console.log("Apply Filter triggered");
         const firstName = document.getElementById('filterFirstName').value.toLowerCase();
         const department = document.getElementById('filterDepartment').value;
         const role = document.getElementById('filterRole').value;
@@ -141,32 +145,62 @@ let filteredEmployees = [...employees];
                    (!department || emp.department === department) &&
                    (!role || emp.role === role);
         });
+        applySort();
         currentPage = 1;
         renderEmployees();
-        toggleFilter();
+    }
+
+    // Resets filter to initial state
+    function resetFilter() {
+        console.log("Reset Filter triggered");
+        document.getElementById('filterFirstName').value = '';
+        document.getElementById('filterDepartment').value = '';
+        document.getElementById('filterRole').value = '';
+        filteredEmployees = [...employees];
+        applySort();
+        currentPage = 1;
+        renderEmployees();
+    }
+
+    // Applies sorting based on selected field
+    function applySort() {
+        console.log("Apply Sort triggered");
+        const sortSelect = document.getElementById('sortField');
+        sortField = sortSelect.value || null;
+        if (sortField) {
+            filteredEmployees.sort((a, b) => {
+                let aValue = a[sortField];
+                let bValue = b[sortField];
+                if (typeof aValue === 'string') aValue = aValue.toLowerCase();
+                if (typeof bValue === 'string') bValue = bValue.toLowerCase();
+                if (aValue < bValue) return -1 * sortDirection;
+                if (aValue > bValue) return 1 * sortDirection;
+                return 0;
+            });
+        }
+        renderEmployees();
+    }
+
+    // Toggles sort direction
+    function toggleSortDirection() {
+        console.log("Toggle Sort Direction triggered");
+        sortDirection *= -1; // Toggle between 1 and -1
+        applySort();
     }
 
     // Handles search input
     document.getElementById('searchInput').addEventListener('input', function(e) {
-        console.log("Search input triggered"); // Debug log
+        console.log("Search input triggered");
         const search = e.target.value.toLowerCase();
         filteredEmployees = employees.filter(emp =>
             emp.firstName.toLowerCase().includes(search) ||
             emp.lastName.toLowerCase().includes(search) ||
             emp.email.toLowerCase().includes(search)
         );
+        applySort();
         currentPage = 1;
         renderEmployees();
     });
-    function resetFilter() {
-        console.log("Reset Filter triggered"); // Debug log
-        document.getElementById('filterFirstName').value = '';
-        document.getElementById('filterDepartment').value = '';
-        document.getElementById('filterRole').value = '';
-        filteredEmployees = [...employees];
-        currentPage = 1;
-        renderEmployees();
-    }
 
     // Renders the employee grid with pagination
     function renderEmployees() {
@@ -196,7 +230,7 @@ let filteredEmployees = [...employees];
 
     // Navigates to the previous page
     function prevPage() {
-        console.log("Previous Page triggered"); // Debug log
+        console.log("Previous Page triggered");
         if (currentPage > 1) {
             currentPage--;
             renderEmployees();
@@ -205,7 +239,7 @@ let filteredEmployees = [...employees];
 
     // Navigates to the next page
     function nextPage() {
-        console.log("Next Page triggered"); // Debug log
+        console.log("Next Page triggered");
         if (currentPage * pageSize < filteredEmployees.length) {
             currentPage++;
             renderEmployees();
@@ -214,3 +248,4 @@ let filteredEmployees = [...employees];
 
     // Initial render
     renderEmployees();
+    
