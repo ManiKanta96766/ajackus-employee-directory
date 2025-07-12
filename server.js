@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const server = http.createServer((req, res) => {
-  const filePath = path.join(__dirname, req.url === '/' ? 'index.html' : req.url);
+  const filePath = path.join(__dirname, req.url === '/' ? 'index.ftlh' : req.url);
   fs.readFile(filePath, (err, data) => {
     if (err) {
       res.writeHead(404);
