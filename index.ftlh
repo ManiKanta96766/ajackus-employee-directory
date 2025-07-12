@@ -15,6 +15,15 @@
             </div>
             <button class="filter-btn" onclick="toggleFilter()">Filter</button>
         </div>
+        <div class="sort-controls">
+            <label for="sortField">Sort by:</label>
+            <select id="sortField" onchange="applySort()">
+                <option value="">None</option>
+                <option value="firstName">Name</option>
+                <option value="department">Department</option>
+            </select>
+            <button onclick="toggleSortDirection()">Toggle Direction</button>
+        </div>
         <button onclick="showAddForm()">Add Employee</button>
         <div class="form-container" id="employeeForm">
             <h2 id="formTitle">Add Employee</h2>
@@ -41,7 +50,7 @@
             </form>
         </div>
         <div class="employee-grid" id="employeeGrid">
-            <!-- Employees will be populated by JavaScript -->
+            <!-- Employees will be populated dynamically by JavaScript -->
         </div>
         <div class="pagination">
             <select id="pageSize" onchange="renderEmployees()" aria-label="Items per page">
