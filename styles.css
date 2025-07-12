@@ -16,16 +16,34 @@ body {
 .search-bar input {
     padding: 8px;
     width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 .filter-btn {
     padding: 8px 16px;
     background-color: #007bff;
     color: white;
     border: none;
+    border-radius: 4px;
     cursor: pointer;
 }
 .filter-btn:hover {
     background-color: #0056b3;
+}
+.sort-controls {
+    margin: 10px 0;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.sort-controls select, .sort-controls button {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.sort-controls button:hover {
+    background-color: #e9ecef;
 }
 .employee-grid {
     display: grid;
@@ -42,9 +60,12 @@ body {
     margin: 5px;
     padding: 5px 10px;
     cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f9fa;
 }
 .employee-card button:hover {
-    background-color: #f0f0f0;
+    background-color: #e9ecef;
 }
 .form-container {
     display: none;
@@ -52,16 +73,20 @@ body {
     padding: 20px;
     margin-bottom: 20px;
     border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 .form-container input, .form-container select {
     display: block;
     width: 100%;
     margin: 10px 0;
     padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 .error {
     color: red;
     font-size: 0.9em;
+    display: block;
 }
 .pagination {
     margin-top: 20px;
@@ -71,9 +96,12 @@ body {
     padding: 8px 12px;
     margin: 0 5px;
     cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f9fa;
 }
 .pagination button:hover {
-    background-color: #f0f0f0;
+    background-color: #e9ecef;
 }
 .modal-overlay {
     display: none;
@@ -93,18 +121,56 @@ body {
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    width: 300px;
+    width: 350px;
+    max-height: 80vh;
+    overflow-y: auto;
 }
 .modal-overlay.active, .filter-modal.active {
     display: flex;
 }
+.filter-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.filter-content label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.filter-content input, .filter-content select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.filter-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+.apply-btn, .reset-btn, .close-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.apply-btn {
+    background-color: #28a745;
+    color: white;
+}
+.apply-btn:hover {
+    background-color: #218838;
+}
+.reset-btn {
+    background-color: #ffc107;
+    color: black;
+}
+.reset-btn:hover {
+    background-color: #e0a800;
+}
 .close-btn {
-    margin-top: 10px;
-    padding: 5px 10px;
     background-color: #dc3545;
     color: white;
-    border: none;
-    cursor: pointer;
 }
 .close-btn:hover {
     background-color: #c82333;
@@ -118,6 +184,10 @@ body {
     }
     .search-bar input {
         width: 100%;
+    }
+    .sort-controls {
+        flex-direction: column;
+        gap: 5px;
     }
     .filter-modal {
         width: 90%;
